@@ -18,6 +18,40 @@
             height: 541px;
         }
         </style>
+	    <style>
+    #map {
+        width: 1054px;
+        height: 541px;
+    }
+
+    /* Estilo para la capa 'Vendidas' con fondo circular rojo */
+    .etiqueta-vendida-circular {
+        background-color: #ff0000;
+        color: #ffffff;
+        padding: 6px; /* Relleno ajustado para un círculo más perfecto */
+        border-radius: 50%; /* Borde circular */
+        font-weight: bold;
+        font-size: 10px;
+        white-space: nowrap;
+        line-height: 1; /* Ajusta la altura de la línea para centrar el texto */
+        min-width: 25px; /* Asegura un tamaño mínimo para el círculo */
+        text-align: center;
+    }
+
+    /* Estilo para la capa 'Disponibles' con fondo circular verde */
+    .etiqueta-disponible-circular {
+        background-color: #008000;
+        color: #ffffff;
+        padding: 6px;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 10px;
+        white-space: nowrap;
+        line-height: 1;
+        min-width: 25px;
+        text-align: center;
+    }
+</style>
         <title></title>
     </head>
     <body>
@@ -315,10 +349,7 @@
                 map.removeLayer(layer_Disponibles_4);
             }
         var overlaysTree = [
-            {label: '<img src="legend/Limite_5.png" /> Limite', layer: layer_Limite_5},
-            {label: '<img src="legend/Disponibles_4.png" /> Disponibles', layer: layer_Disponibles_4},
-            {label: '<img src="legend/Vendidas_3.png" /> Vendidas', layer: layer_Vendidas_3},
-            {label: '<img src="legend/Acceso_2.png" /> Acceso', layer: layer_Acceso_2},
+            
             {label: "Satelite", layer: layer_Satelite_1, radioGroup: 'bm' },
             {label: "OpenStreetMap", layer: layer_OpenStreetMap_0, radioGroup: 'bm' },]
         var lay = L.control.layers.tree(null, overlaysTree,{
@@ -333,31 +364,41 @@
         lay.addTo(map);
         setBounds();
         var i = 0;
-        layer_Vendidas_3.eachLayer(function(layer) {
-            var context = {
-                feature: layer.feature,
-                variables: {}
-            };
-            layer.bindTooltip((layer.feature.properties['Lote'] !== null?String('<div style="color: #ffffff; font-size: 8pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['Lote']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Vendidas_3'});
-            labels.push(layer);
-            totalMarkers += 1;
-              layer.added = true;
-              addLabel(layer, i);
-              i++;
-        });
+layer_Vendidas_3.eachLayer(function(layer) {
+    var context = {
+        feature: layer.feature,
+        variables: {}
+    };
+    layer.bindTooltip(String(layer.feature.properties['Lote']), {
+        permanent: true,
+        direction: 'top',
+        className: 'etiqueta-vendida-circular',
+        offset: [0, 0] // Ajuste el desplazamiento para centrar mejor
+    }).openTooltip();
+    labels.push(layer);
+    totalMarkers += 1;
+      layer.added = true;
+      addLabel(layer, i);
+      i++;
+});
         var i = 0;
-        layer_Disponibles_4.eachLayer(function(layer) {
-            var context = {
-                feature: layer.feature,
-                variables: {}
-            };
-            layer.bindTooltip((layer.feature.properties['Lote'] !== null?String('<div style="color: #fff5f0; font-size: 8pt; font-family: \'Arial\', sans-serif;">' + layer.feature.properties['Lote']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Disponibles_4'});
-            labels.push(layer);
-            totalMarkers += 1;
-              layer.added = true;
-              addLabel(layer, i);
-              i++;
-        });
+layer_Disponibles_4.eachLayer(function(layer) {
+    var context = {
+        feature: layer.feature,
+        variables: {}
+    };
+    layer.bindTooltip(String(layer.feature.properties['Lote']), {
+        permanent: true,
+        direction: 'top',
+        className: 'etiqueta-disponible-circular',
+        offset: [0, 0] // Ajuste el desplazamiento para centrar mejor
+    }).openTooltip();
+    labels.push(layer);
+    totalMarkers += 1;
+      layer.added = true;
+      addLabel(layer, i);
+      i++;
+});
         resetLabels([layer_Vendidas_3,layer_Disponibles_4]);
         map.on("zoomend", function(){
             resetLabels([layer_Vendidas_3,layer_Disponibles_4]);
